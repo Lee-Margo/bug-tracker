@@ -54,12 +54,20 @@ pipeline {
                     sh '''
                         npm ci
                         npm test
+
+                        mkdir -p reports
+                        mv coverage.html reports/
                     '''
                 }
             }
             post {
                 always {
                     junit'bugtracker-frontend/test-results.xml'
+                    publishHTML target :[
+                        reportDir: 'bugtracker-frontend/reports',
+                        reportFiles: 'coverage.html',
+                        reportName: 'Frontend Coverage Report'
+                    ]
                 }
             }
         }
