@@ -56,7 +56,7 @@ pipeline {
                         npm test
 
                         mkdir -p reports
-                        mv coverage.html reports/
+                        mv coverage reports/
                     '''
                 }
             }
