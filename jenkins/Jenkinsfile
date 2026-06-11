@@ -33,12 +33,14 @@ pipeline {
             }
             post {
                 always {
-                    junit 'bugtracker-backend/test-results.xml'
-                    publishHTML target: [
-                        reportDir: 'bugtracker-backend/reports'
-                        reportFiles: 'coverage.html'
-                        reportName: 'Backend Coverage Report'
-                    ]
+                    steps{
+                        junit 'bugtracker-backend/test-results.xml'
+                        publishHTML target: [
+                            reportDir: 'bugtracker-backend/reports'
+                            reportFiles: 'coverage.html'
+                            reportName: 'Backend Coverage Report'
+                        ]
+                    }
                 }
             }
         }
