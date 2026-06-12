@@ -109,7 +109,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'tests-api/test-results.results/xml'
+                    junit 'tests-api/test-results/results/xml'
                     publishHTML target :[
                                 reportDir: 'test-api/playwright-report',
                                 reportFiles: 'index.html',
