@@ -14,20 +14,12 @@ pipeline {
                     steps {
                         dir('bugtracker-backend') {
                             sh '''
-                                # Set Go cache to a writable location
                                 export GOCACHE="$PWD/.cache/go-build"
                                 export GOMODCACHE="$PWD/.cache/go-mod"
-                                
-                                # Create cache directories
                                 mkdir -p "$GOCACHE" "$GOMODCACHE"
-                                
-                                # Run the tests
                                 go test -v ./... 2>&1 | go-junit-report > test-results.xml
-                                
-                                #Generate coverage report
                                 go test -coverprofile=coverage.out -covermode=atomic ./...
                                 go tool cover -html=coverage.out -o coverage.html
-
                                 mkdir -p reports
                                 mv coverage.html reports/
                             '''
@@ -37,9 +29,9 @@ pipeline {
                         always {
                             junit 'bugtracker-backend/test-results.xml'
                             publishHTML target: [
-                                reportDir:'bugtracker-backend/reports',
-                                reportFiles:'coverage.html',
-                                reportName:'Backend Coverage Report'
+                                reportDir: 'bugtracker-backend/reports',
+                                reportFiles: 'coverage.html',
+                                reportName: 'Backend Coverage Report'
                             ]
                         }
                     }
@@ -56,7 +48,6 @@ pipeline {
                             sh '''
                                 npm ci
                                 npm test
-
                                 mkdir -p reports
                                 mv coverage reports/
                             '''
@@ -64,8 +55,8 @@ pipeline {
                     }
                     post {
                         always {
-                            junit'bugtracker-frontend/test-results.xml'
-                            publishHTML target :[
+                            junit 'bugtracker-frontend/test-results.xml'
+                            publishHTML target: [
                                 reportDir: 'bugtracker-frontend/reports/coverage',
                                 reportFiles: 'index.html',
                                 reportName: 'Frontend Coverage Report'
@@ -79,14 +70,12 @@ pipeline {
             agent {
                 docker {
                     image 'docker:27.5.1'
-                    reuseNode true 
-                    args '-v /var/run/docker.sock:/var/run/docker.sock -u 0'
+                    reuseNode true
+                    args '-v jenkins-docker-certs:/certs/client:ro -e DOCKER_TLS_VERIFY=1 -e DOCKER_CERT_PATH=/certs/client -e DOCKER_HOST=tcp://docker:2376 --network jenkins_jenkins'
                 }
             }
             steps {
-                    sh '''
-                        docker compose up --build -d
-                    '''
+                sh 'docker compose up --build -d'
             }
         }
         stage('API Tests') {
@@ -101,7 +90,6 @@ pipeline {
                 dir('tests-api') {
                     sh '''
                         npx wait-port http://localhost:8080/api/health -t 30000
-
                         npm ci
                         npx playwright test
                     '''
