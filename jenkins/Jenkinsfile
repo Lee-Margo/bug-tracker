@@ -84,7 +84,12 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker compose up --build -d'
+                    sh '''
+                        ls -la
+                        docker version
+                        
+                        docker compose up --build -d
+                    '''
             }
         }
     }
