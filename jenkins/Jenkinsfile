@@ -3,7 +3,7 @@ pipeline {
 
     stages {
         stage('clean before start') {
-            always {
+            steps {
                 cleanWs()
             }
         }
@@ -90,8 +90,8 @@ pipeline {
             }
             steps {
                     sh '''
-                        #ls -la
-                        #docker version
+                        ls -la
+                        docker version
                         
                         docker compose up --build -d
                     '''
