@@ -9,6 +9,7 @@ pipeline {
                         docker {
                             image 'snakee/golang-junit:1.21'
                             reuseNode true
+                            args '--network jenkins_jenkins'
                         }
                     }
                     steps {
@@ -49,6 +50,7 @@ pipeline {
                         docker {
                             image 'node:20'
                             reuseNode true
+                            args '--network jenkins_jenkins'
                         }
                     }
                     steps {
