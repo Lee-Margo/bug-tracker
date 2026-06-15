@@ -127,7 +127,7 @@ pipeline {
                 }
             }
             steps {
-                dir('test-e2e') {
+                dir('tests-e2e') {
                     sh '''
                         npm ci
                         npx playwright test
