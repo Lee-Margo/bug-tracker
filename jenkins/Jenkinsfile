@@ -55,7 +55,7 @@ pipeline {
                         dir('bugtracker-frontend') {
                             sh '''
                                 npm ci
-                                NEXT_SWC_DISABLED=1 npm test
+                                npm test
 
                                 mkdir -p reports
                                 mv coverage reports/
@@ -115,6 +115,23 @@ pipeline {
                                 reportFiles: 'index.html',
                                 reportName: 'Playwright API Test Report'
                             ]
+                }
+            }
+        }
+        stage('E2E Tests') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.50.0-jammy'
+                    reuseNode true
+                    args '-u 0 --network=host'
+                }
+            }
+            steps {
+                dir('test-e2e') {
+                    sh '''
+                        npm ci
+                        npx playwright test
+                    '''
                 }
             }
         }

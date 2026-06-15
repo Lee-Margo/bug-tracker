@@ -45,5 +45,9 @@
     "suiteNameTemplate": "{filepath}",
     "classNameTemplate": "{classname}",
     "titleTemplate": "{title}"
+  },
+  "optionalDependencies": {
+    "@next/swc-linux-x64-gnu": "^16.2.9",
+    "@next/swc-linux-x64-musl": "^16.2.9"
   }
 }
